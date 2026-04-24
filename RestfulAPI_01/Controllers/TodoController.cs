@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using RestfulAPI_01.DTOs;
 
 namespace RestfulAPI_01.Controllers
 {
@@ -18,7 +19,18 @@ namespace RestfulAPI_01.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetAll()
         {
-            return await _context.TodoItems.ToListAsync();
+            List<TodoItem>? items = await _context.TodoItems.ToListAsync();
+
+            var result = items.Select(items => new TodoReadDto
+            {
+                Id = items.Id,
+                Title = items.Title,
+                IsDone = items.IsDone
+            });
+
+            return Ok(result);
+
+            //return await _context.TodoItems.ToListAsync(); => Dto nélkül
         }
 
         [HttpGet("{id}")]
@@ -26,14 +38,34 @@ namespace RestfulAPI_01.Controllers
         {
             var item = await _context.TodoItems.FindAsync(id);
             if (item is null) return NotFound();
-            return item;
+
+            return Ok(new TodoReadDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                IsDone = item.IsDone
+            });
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> Create(TodoItem item)
+        public async Task<ActionResult<TodoReadDto>> Create(TodoCreateDto dto)
         {
+            TodoItem? item = new TodoItem
+            {
+                Title = dto.Title,
+                IsDone = false
+            };
+
             _context.TodoItems.Add(item);
             await _context.SaveChangesAsync();
+
+            TodoReadDto? result = new TodoReadDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                IsDone = item.IsDone
+            };
+
             return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
         }
 

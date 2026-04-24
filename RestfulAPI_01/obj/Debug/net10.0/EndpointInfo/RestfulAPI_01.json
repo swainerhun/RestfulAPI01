@@ -58,17 +58,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TodoItem"
+                "$ref": "#/components/schemas/TodoCreateDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/TodoItem"
+                "$ref": "#/components/schemas/TodoCreateDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/TodoItem"
+                "$ref": "#/components/schemas/TodoCreateDto"
               }
             }
           },
@@ -80,17 +80,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TodoItem"
+                  "$ref": "#/components/schemas/TodoReadDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TodoItem"
+                  "$ref": "#/components/schemas/TodoReadDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TodoItem"
+                  "$ref": "#/components/schemas/TodoReadDto"
                 }
               }
             }
@@ -254,7 +254,34 @@
   },
   "components": {
     "schemas": {
+      "TodoCreateDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
       "TodoItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "isDone": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TodoReadDto": {
         "type": "object",
         "properties": {
           "id": {

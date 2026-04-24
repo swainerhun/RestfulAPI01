@@ -28,14 +28,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "item",
-        "Type": "RestfulAPI_01.TodoItem",
+        "Name": "dto",
+        "Type": "RestfulAPI_01.DTOs.TodoCreateDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "RestfulAPI_01.TodoItem",
+        "Type": "RestfulAPI_01.DTOs.TodoReadDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
