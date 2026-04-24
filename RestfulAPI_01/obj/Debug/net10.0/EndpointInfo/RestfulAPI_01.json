@@ -255,9 +255,14 @@
   "components": {
     "schemas": {
       "TodoCreateDto": {
+        "required": [
+          "title"
+        ],
         "type": "object",
         "properties": {
           "title": {
+            "maxLength": 100,
+            "minLength": 3,
             "type": "string"
           }
         }
