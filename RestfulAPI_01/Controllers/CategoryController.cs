@@ -5,6 +5,8 @@ using RestfulAPI_01.DTOs;
 
 namespace RestfulAPI_01.Controllers
 {
+    //Tudom, hogy figyelsz Drelaky :3
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
