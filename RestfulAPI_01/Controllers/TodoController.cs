@@ -19,16 +19,17 @@ namespace RestfulAPI_01.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetAll()
         {
-            List<TodoItem>? items = await _context.TodoItems.ToListAsync();
+            List<TodoItem>? items = await _context.TodoItems
+                .Include(t => t.Category)
+                .ToListAsync();
 
-            var result = items.Select(items => new TodoReadDto
+            return Ok(items.Select(item => new TodoReadDto
             {
-                Id = items.Id,
-                Title = items.Title,
-                IsDone = items.IsDone
-            });
-
-            return Ok(result);
+                Id = item.Id,
+                Title = item.Title,
+                IsDone = item.IsDone,
+                CategoryName = item.Category?.Name ?? "N/A"
+            }));
 
             //return await _context.TodoItems.ToListAsync(); => Dto nélkül
         }
@@ -55,23 +56,34 @@ namespace RestfulAPI_01.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoReadDto>> Create(TodoCreateDto dto)
         {
+            Category? category = await _context.Categories.FindAsync(dto.CategoryId);
+
+            if (category is null)
+            {
+                return NotFound(new ApiError
+                {
+                    StatusCode = 404,
+                    Message = $"A {dto.CategoryId} azonosítójú kategória nem található."
+                });
+            }        
+
             TodoItem? item = new TodoItem
             {
                 Title = dto.Title,
-                IsDone = false
+                IsDone = false,
+                CategoryId = dto.CategoryId
             };
 
             _context.TodoItems.Add(item);
             await _context.SaveChangesAsync();
 
-            TodoReadDto? result = new TodoReadDto
+            return CreatedAtAction(nameof(GetById), new { id = item.Id }, new TodoReadDto
             {
                 Id = item.Id,
                 Title = item.Title,
-                IsDone = item.IsDone
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+                IsDone = item.IsDone,
+                CategoryName = category.Name
+            });
         }
 
         [HttpPut("{id}")]

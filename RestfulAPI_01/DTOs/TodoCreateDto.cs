@@ -5,9 +5,11 @@ namespace RestfulAPI_01.DTOs
     public class TodoCreateDto
     {
         [Required(ErrorMessage = "A cím megadása kötelező.")]
-        [MinLength(3, ErrorMessage = "A címnek legalább 3 karakter hosszúnak kell lennie.")]
-        [MaxLength(100, ErrorMessage = "A cím nem lehet hosszabb 100 karakternél.")]
+        [MinLength(3)]
+        [MaxLength(100)]
+        public string? Title { get; set; }
 
-        public string Title { get; set; } = string.Empty;
+        [Required(ErrorMessage = "A kategória megadása kötelező.")]
+        public int CategoryId { get; set; }
     }
 }

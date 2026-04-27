@@ -8,5 +8,6 @@ namespace RestfulAPI_01
             : base(options) { }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
