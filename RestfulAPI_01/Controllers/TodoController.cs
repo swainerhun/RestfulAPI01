@@ -36,8 +36,13 @@ namespace RestfulAPI_01.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetById(int id)
         {
-            var item = await _context.TodoItems.FindAsync(id);
-            if (item is null) return NotFound();
+            TodoItem? item = await _context.TodoItems.FindAsync(id);
+            if (item is null) 
+                return NotFound(new ApiError
+                {
+                    StatusCode = 404,
+                    Message = $"A {id} azonosítójú elem nem található."
+                });
 
             return Ok(new TodoReadDto
             {
@@ -86,7 +91,12 @@ namespace RestfulAPI_01.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             TodoItem? item = await _context.TodoItems.FindAsync(id);
-            if (item is null) return NotFound();
+            if (item is null) 
+                return NotFound(new ApiError
+                {
+                    StatusCode = 404,
+                    Message = $"A {id} azonosítójú todo nem található."
+                });
 
             _context.TodoItems.Remove(item);
             await _context.SaveChangesAsync();

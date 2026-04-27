@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RestfulAPI_01;
+using RestfulAPI_01.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
